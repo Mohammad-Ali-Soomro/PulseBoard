@@ -15,6 +15,14 @@ const COIN_DETAILS: Record<string, { symbol: string; name: string }> = {
   dogecoin: { symbol: "DOGE", name: "Dogecoin" },
 };
 
+export const COIN_LOGOS: Record<string, string> = {
+  bitcoin: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+  ethereum: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+  solana: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+  cardano: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
+  dogecoin: "https://assets.coingecko.com/coins/images/325/large/dogecoin.png",
+};
+
 const COIN_IDS = Object.keys(COIN_DETAILS).join(",");
 const CACHE_DURATION_MS = 10000; // 10 seconds
 

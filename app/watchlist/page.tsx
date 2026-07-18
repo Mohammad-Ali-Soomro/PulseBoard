@@ -2,6 +2,8 @@ import Navbar from "@/components/Navbar";
 import WatchlistForm from "@/components/WatchlistForm";
 import { supabase } from "@/lib/supabase";
 import { Award, Eye, Flame } from "lucide-react";
+import Image from "next/image";
+import { COIN_LOGOS } from "@/lib/prices";
 
 export const revalidate = 60; // Incremental Static Regeneration (ISR) - 60s TTL
 
@@ -122,14 +124,23 @@ export default async function WatchlistPage() {
                     {rank}
                   </div>
 
-                  {/* Coin Name and Info */}
-                  <div className="w-28 sm:w-36 shrink-0">
-                    <span className="font-sans font-bold text-sm sm:text-base text-text-primary block">
-                      {item.name}
-                    </span>
-                    <span className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">
-                      {item.count} {item.count === 1 ? "watch" : "watches"}
-                    </span>
+                  {/* Coin Name and Info with Logo */}
+                  <div className="flex items-center gap-3 w-32 sm:w-44 shrink-0">
+                    <Image
+                      src={COIN_LOGOS[item.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
+                      alt={`${item.name} logo`}
+                      width={24}
+                      height={24}
+                      className="rounded-full bg-surface border border-border shrink-0"
+                    />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-sans font-bold text-sm sm:text-base text-text-primary block truncate leading-tight">
+                        {item.name}
+                      </span>
+                      <span className="text-[9px] text-text-secondary font-bold uppercase tracking-wider mt-0.5 leading-none">
+                        {item.count} {item.count === 1 ? "watch" : "watches"}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Visual Popularity Bar */}

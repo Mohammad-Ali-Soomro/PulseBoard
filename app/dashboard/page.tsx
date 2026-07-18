@@ -1,7 +1,8 @@
 import Navbar from "@/components/Navbar";
-import { fetchCryptoPrices } from "@/lib/prices";
+import { fetchCryptoPrices, COIN_LOGOS } from "@/lib/prices";
 import { ArrowUpRight, ArrowDownRight, TrendingUp } from "lucide-react";
 import PriceChart from "@/components/PriceChart";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -63,14 +64,25 @@ export default async function DashboardPage() {
                 className="flex flex-col justify-between bg-white border border-border rounded-card p-6 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200"
               >
                 <div>
-                  {/* Name and Symbol */}
+                  {/* Name and Symbol with Logo */}
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="font-sans font-semibold text-text-secondary text-xs uppercase tracking-wider">
-                      {coin.symbol}
-                    </span>
-                    <span className="font-sans font-medium text-text-primary text-sm">
-                      {coin.name}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={COIN_LOGOS[coin.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
+                        alt={`${coin.name} logo`}
+                        width={32}
+                        height={32}
+                        className="rounded-full bg-surface border border-border"
+                      />
+                      <div className="flex flex-col">
+                        <span className="font-sans font-semibold text-text-secondary text-[10px] uppercase tracking-wider leading-none">
+                          {coin.symbol}
+                        </span>
+                        <span className="font-sans font-bold text-text-primary text-sm mt-0.5 leading-none">
+                          {coin.name}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Current Price */}
