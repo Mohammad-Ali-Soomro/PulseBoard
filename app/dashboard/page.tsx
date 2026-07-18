@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { fetchCryptoPrices } from "@/lib/prices";
 import { ArrowUpRight, ArrowDownRight, TrendingUp } from "lucide-react";
+import PriceChart from "@/components/PriceChart";
 
 export const dynamic = "force-dynamic";
 
@@ -117,15 +118,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Placeholder visual */}
-          <div className="h-80 w-full rounded-card bg-surface border border-dashed border-border flex flex-col items-center justify-center text-center p-6">
-            <div className="text-text-secondary text-sm font-semibold mb-1">
-              Historical Chart Pending
-            </div>
-            <div className="text-text-secondary/70 text-xs max-w-sm">
-              Recharts graph configuration will be injected here in the next step.
-            </div>
-          </div>
+          <PriceChart coinId="bitcoin" />
         </div>
       </main>
     </div>
