@@ -40,9 +40,10 @@ export default function Navbar() {
         <div>
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-primary rounded-pill hover:opacity-90 active:scale-98 transition-all shadow-sm shadow-primary/10"
+            className="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-primary rounded-pill hover:opacity-90 active:scale-98 transition-all shadow-sm shadow-primary/10"
           >
-            Launch Dashboard
+            <span className="hidden sm:inline">Launch Dashboard</span>
+            <span className="inline sm:hidden">Launch</span>
           </Link>
         </div>
       </div>

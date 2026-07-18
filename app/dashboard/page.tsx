@@ -6,6 +6,11 @@ import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Live Market Dashboard",
+  description: "Monitor live prices and historical trends for Bitcoin, Ethereum, Solana, and other major assets.",
+};
+
 function formatPrice(price: number): string {
   if (price < 1) {
     return `$${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`;

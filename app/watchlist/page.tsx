@@ -7,6 +7,11 @@ import { COIN_LOGOS } from "@/lib/prices";
 
 export const revalidate = 60; // Incremental Static Regeneration (ISR) - 60s TTL
 
+export const metadata = {
+  title: "Sentiment Leaderboard",
+  description: "Global asset sentiment and trending watchlists aggregated across the PulseBoard operator network.",
+};
+
 const COIN_NAMES: Record<string, string> = {
   bitcoin: "Bitcoin",
   ethereum: "Ethereum",
