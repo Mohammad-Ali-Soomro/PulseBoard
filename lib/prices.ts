@@ -52,11 +52,23 @@ export async function fetchCryptoPrices(): Promise<{
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 7000); // 7s timeout
 
+    const headers: Record<string, string> = {
+      "Accept": "application/json",
+    };
+
+    const apiKey = process.env.COINGECKO_API_KEY;
+    if (apiKey) {
+      headers["x-cg-demo-api-key"] = apiKey;
+    } else {
+      console.warn(
+        "Warning: COINGECKO_API_KEY is not defined. " +
+        "Making unauthenticated request to CoinGecko public API (subject to rate limits)."
+      );
+    }
+
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        "Accept": "application/json",
-      },
+      headers,
       cache: "no-store", // disable HTTP-level fetch caching
     });
 

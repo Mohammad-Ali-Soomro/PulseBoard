@@ -50,12 +50,24 @@ export async function GET(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
+    const headers: Record<string, string> = {
+      "Accept": "application/json",
+    };
+
+    const apiKey = process.env.COINGECKO_API_KEY;
+    if (apiKey) {
+      headers["x-cg-demo-api-key"] = apiKey;
+    } else {
+      console.warn(
+        `Warning: COINGECKO_API_KEY is not defined. ` +
+        `Making unauthenticated price history request for ${coinId} to CoinGecko (subject to rate limits).`
+      );
+    }
+
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        "Accept": "application/json"
-      },
-      cache: "no-store"
+      headers,
+      cache: "no-store",
     });
 
     clearTimeout(timeoutId);
