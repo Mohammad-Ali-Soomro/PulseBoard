@@ -31,13 +31,19 @@ export async function GET(
     );
   }
 
+  const { searchParams } = new URL(request.url);
+  const daysParam = searchParams.get("days") || "7";
+  const days = ["7", "30", "90"].includes(daysParam) ? daysParam : "7";
+
   const currentTime = Date.now();
-  const cached = historyCache.get(coinId);
+  const cacheKey = `${coinId}_${days}`;
+  const cached = historyCache.get(cacheKey);
 
   // Return cached result if valid
   if (cached && (currentTime - cached.timestamp < CACHE_DURATION_MS)) {
     return NextResponse.json({
       coinId,
+      days,
       data: cached.data,
       cached: true,
       timestamp: cached.timestamp
@@ -45,7 +51,7 @@ export async function GET(
   }
 
   try {
-    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7&interval=daily`;
+    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}&interval=daily`;
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
@@ -95,13 +101,14 @@ export async function GET(
     });
 
     // Save to cache
-    historyCache.set(coinId, {
+    historyCache.set(cacheKey, {
       data: formattedData,
       timestamp: currentTime
     });
 
     return NextResponse.json({
       coinId,
+      days,
       data: formattedData,
       cached: false,
       timestamp: currentTime
@@ -113,6 +120,7 @@ export async function GET(
     if (cached) {
       return NextResponse.json({
         coinId,
+        days,
         data: cached.data,
         cached: true,
         fallback: true,

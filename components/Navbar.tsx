@@ -29,6 +29,12 @@ export default function Navbar() {
             Watchlist
           </Link>
           <Link
+            href="/simulator"
+            className="text-sm font-medium text-text-muted hover:text-ink transition-colors"
+          >
+            Simulator
+          </Link>
+          <Link
             href="/#features"
             className="text-sm font-medium text-text-muted hover:text-ink transition-colors"
           >
