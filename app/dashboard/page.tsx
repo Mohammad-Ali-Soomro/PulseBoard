@@ -5,6 +5,10 @@ import PriceChart from "@/components/PriceChart";
 import Image from "next/image";
 import AlertWidget from "@/components/AlertWidget";
 import AlertManager from "@/components/AlertManager";
+import { cookies } from "next/headers";
+import { supabase } from "@/lib/supabase";
+import CoinSearch from "@/components/CoinSearch";
+import RemoveCoinButton from "@/components/RemoveCoinButton";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +38,27 @@ function formatMarketCap(val: number): string {
 }
 
 export default async function DashboardPage() {
-  const { data: prices, timestamp } = await fetchCryptoPrices();
+  const cookieStore = await cookies();
+  const userEmail = cookieStore.get("pulseboard_user_email")?.value;
+  let coinIds: string | undefined = undefined;
+
+  // Retrieve user custom coins from Supabase if email is set in cookies
+  if (userEmail) {
+    try {
+      const { data, error } = await supabase
+        .from("user_coins")
+        .select("coin_id")
+        .eq("user_email", userEmail.trim().toLowerCase());
+
+      if (!error && data && data.length > 0) {
+        coinIds = data.map((item) => item.coin_id).join(",");
+      }
+    } catch (err) {
+      console.error("Failed to load user tracked coins from Supabase:", err);
+    }
+  }
+
+  const { data: prices, timestamp } = await fetchCryptoPrices(coinIds);
   const lastUpdatedStr = new Date(timestamp).toLocaleTimeString();
 
   return (
@@ -62,6 +86,9 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        {/* Dynamic Search & Track input */}
+        <CoinSearch />
+
         {/* Price Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
           {prices.map((coin) => {
@@ -76,9 +103,9 @@ export default async function DashboardPage() {
                 <div>
                   {/* Name and Symbol with Logo */}
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                       <Image
-                        src={COIN_LOGOS[coin.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
+                        src={coin.image || COIN_LOGOS[coin.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
                         alt={`${coin.name} logo`}
                         width={32}
                         height={32}
@@ -93,6 +120,8 @@ export default async function DashboardPage() {
                         </span>
                       </div>
                     </div>
+                    {/* Delete action button */}
+                    <RemoveCoinButton coinId={coin.id} coinName={coin.name} />
                   </div>
 
                   {/* Current Price */}
@@ -149,3 +178,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

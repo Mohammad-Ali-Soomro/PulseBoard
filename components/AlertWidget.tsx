@@ -73,6 +73,7 @@ export default function AlertWidget({ coinId, currentPrice }: AlertWidgetProps) 
       // Save email locally
       if (typeof window !== "undefined") {
         localStorage.setItem("pulseboard_user_email", cleanEmail);
+        document.cookie = `pulseboard_user_email=${cleanEmail}; path=/; max-age=31536000; SameSite=Lax`;
         setHasStoredEmail(true);
       }
 

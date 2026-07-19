@@ -45,6 +45,12 @@ export default function WatchlistForm() {
         throw error;
       }
 
+      // Save email locally and in cookies
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pulseboard_user_email", cleanEmail);
+        document.cookie = `pulseboard_user_email=${cleanEmail}; path=/; max-age=31536000; SameSite=Lax`;
+      }
+
       setStatus({
         type: "success",
         message: `Successfully added ${SUPPORTED_COINS.find((c) => c.id === coinId)?.name} to your watchlist!`,

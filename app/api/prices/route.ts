@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { fetchCryptoPrices } from "@/lib/prices";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const result = await fetchCryptoPrices();
+    const { searchParams } = new URL(request.url);
+    const coinIds = searchParams.get("coinIds") || undefined;
+    
+    const result = await fetchCryptoPrices(coinIds);
     return NextResponse.json(result);
   } catch (error) {
     console.error("CoinGecko fetch in API route failed:", error);

@@ -5,15 +5,10 @@ export interface CryptoPrice {
   price: number;
   change24h: number;
   marketCap: number;
+  image?: string;
 }
 
-const COIN_DETAILS: Record<string, { symbol: string; name: string }> = {
-  bitcoin: { symbol: "BTC", name: "Bitcoin" },
-  ethereum: { symbol: "ETH", name: "Ethereum" },
-  solana: { symbol: "SOL", name: "Solana" },
-  cardano: { symbol: "ADA", name: "Cardano" },
-  dogecoin: { symbol: "DOGE", name: "Dogecoin" },
-};
+const DEFAULT_COIN_IDS = "bitcoin,ethereum,solana,cardano,dogecoin";
 
 export const COIN_LOGOS: Record<string, string> = {
   bitcoin: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
@@ -23,34 +18,38 @@ export const COIN_LOGOS: Record<string, string> = {
   dogecoin: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png",
 };
 
-const COIN_IDS = Object.keys(COIN_DETAILS).join(",");
 const CACHE_DURATION_MS = 10000; // 10 seconds
 
-// Module-level in-memory cache
-let cachedData: CryptoPrice[] | null = null;
-let lastFetchedTimestamp = 0;
+// In-memory cache keyed by coin lists
+interface CacheEntry {
+  data: CryptoPrice[];
+  timestamp: number;
+}
+const priceCache = new Map<string, CacheEntry>();
 
-export async function fetchCryptoPrices(): Promise<{
+export async function fetchCryptoPrices(customCoinIds?: string): Promise<{
   data: CryptoPrice[];
   cached: boolean;
   timestamp: number;
 }> {
+  const coinIds = (customCoinIds ? customCoinIds.trim().toLowerCase() : DEFAULT_COIN_IDS);
   const currentTime = Date.now();
 
-  // Return cached data if still within TTL (10 seconds)
-  if (cachedData && (currentTime - lastFetchedTimestamp < CACHE_DURATION_MS)) {
+  // Return cached result if valid
+  const cached = priceCache.get(coinIds);
+  if (cached && (currentTime - cached.timestamp < CACHE_DURATION_MS)) {
     return {
-      data: cachedData,
+      data: cached.data,
       cached: true,
-      timestamp: lastFetchedTimestamp,
+      timestamp: cached.timestamp,
     };
   }
 
   try {
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_IDS}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true`;
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinIds}`;
     
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 7000); // 7s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
     const headers: Record<string, string> = {
       "Accept": "application/json",
@@ -69,7 +68,7 @@ export async function fetchCryptoPrices(): Promise<{
     const response = await fetch(url, {
       signal: controller.signal,
       headers,
-      cache: "no-store", // disable HTTP-level fetch caching
+      cache: "no-store",
     });
 
     clearTimeout(timeoutId);
@@ -79,35 +78,56 @@ export async function fetchCryptoPrices(): Promise<{
     }
 
     const rawData = await response.json();
+    if (!Array.isArray(rawData)) {
+      throw new Error("CoinGecko markets response was not an array");
+    }
 
-    // Transform raw CoinGecko response into clean target shape
-    const formattedPrices: CryptoPrice[] = Object.keys(COIN_DETAILS).map((id) => {
-      const stats = rawData[id] || {};
+    const coinIdsArray = coinIds.split(",");
+
+    // Transform raw markets data into target shape
+    const formattedPrices: CryptoPrice[] = rawData.map((item: any) => {
+      // Dynamic fallback register for logos cache
+      if (item.image) {
+        COIN_LOGOS[item.id] = item.image;
+      }
       return {
-        id,
-        symbol: COIN_DETAILS[id].symbol,
-        name: COIN_DETAILS[id].name,
-        price: stats.usd ?? 0,
-        change24h: stats.usd_24h_change ?? 0,
-        marketCap: stats.usd_market_cap ?? 0,
+        id: item.id,
+        symbol: item.symbol.toUpperCase(),
+        name: item.name,
+        price: item.current_price ?? 0,
+        change24h: item.price_change_percentage_24h ?? 0,
+        marketCap: item.market_cap ?? 0,
+        image: item.image,
       };
     });
 
-    // Update in-memory cache
-    cachedData = formattedPrices;
-    lastFetchedTimestamp = currentTime;
+    // Sort to match the requested IDs array order to preserve layout stability
+    const sortedPrices = formattedPrices.sort(
+      (a, b) => coinIdsArray.indexOf(a.id) - coinIdsArray.indexOf(b.id)
+    );
+
+    // Update Cache
+    priceCache.set(coinIds, {
+      data: sortedPrices,
+      timestamp: currentTime,
+    });
 
     return {
-      data: formattedPrices,
+      data: sortedPrices,
       cached: false,
       timestamp: currentTime,
     };
   } catch (error) {
-    console.error("Error in fetchCryptoPrices helper:", error);
+    console.error("Error in fetchCryptoPrices markets helper:", error);
     
-    // If we have stale cache, we can return it as fallback rather than failing completely?
-    // Wait, the prompt for API route says: "Add basic error handling, if the external API fails, return a 500 with a clear error message".
-    // For the server component, we also want the Next.js error boundary (`error.tsx`) to catch it, so throwing is correct.
+    // Serve fallback from cache if available on failure
+    if (cached) {
+      return {
+        data: cached.data,
+        cached: true,
+        timestamp: cached.timestamp,
+      };
+    }
     throw error;
   }
 }
