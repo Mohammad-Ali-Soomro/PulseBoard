@@ -12,7 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Dashboard error boundary caught:", error);
+    console.error("Watchlist error boundary caught:", error);
   }, [error]);
 
   return (
@@ -35,11 +35,11 @@ export default function Error({
           </div>
 
           <h2 className="font-serif font-semibold text-2xl text-ink tracking-tight mb-3">
-            Telemetry Feed Offline
+            Watchlist Offline
           </h2>
 
           <p className="text-text-muted text-sm leading-relaxed mb-8">
-            We couldn't reach the market data. Try again in a moment.
+            We couldn't load the watchlist right now. Try again in a moment.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-3">

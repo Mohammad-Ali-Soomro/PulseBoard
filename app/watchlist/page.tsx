@@ -76,8 +76,9 @@ export default async function WatchlistPage() {
     }))
     .sort((a, b) => b.count - a.count);
 
-  // Compute divisor
+  // Compute divisor and total watches
   const maxWatchCount = Math.max(...sortedStats.map((item) => item.count), 1);
+  const totalWatches = sortedStats.reduce((sum, item) => sum + item.count, 0);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -115,54 +116,63 @@ export default async function WatchlistPage() {
             </div>
           </div>
 
-          {/* Leaderboard List */}
-          <div className="space-y-6">
-            {sortedStats.map((item, index) => {
-              const rank = index + 1;
-              const relativePercent = (item.count / maxWatchCount) * 100;
+          {/* Leaderboard List or Empty State */}
+          {totalWatches === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Eye className="w-8 h-8 text-text-muted mb-3 opacity-30" />
+              <p className="text-sm text-text-muted font-medium">
+                Nothing here yet. Add a coin to start tracking it.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {sortedStats.map((item, index) => {
+                const rank = index + 1;
+                const relativePercent = (item.count / maxWatchCount) * 100;
 
-              return (
-                <div key={item.id} className="flex items-center gap-4">
-                  {/* Rank Number */}
-                  <div className="w-8 h-8 rounded-full bg-background border border-border-hairline-soft flex items-center justify-center font-sans font-bold text-sm text-ink shrink-0">
-                    {rank}
-                  </div>
+                return (
+                  <div key={item.id} className="flex items-center gap-4">
+                    {/* Rank Number */}
+                    <div className="w-8 h-8 rounded-full bg-background border border-border-hairline-soft flex items-center justify-center font-sans font-bold text-sm text-ink shrink-0">
+                      {rank}
+                    </div>
 
-                  {/* Coin Name and Info with Logo */}
-                  <div className="flex items-center gap-3 w-32 sm:w-44 shrink-0">
-                    <Image
-                      src={COIN_LOGOS[item.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
-                      alt={`${item.name} logo`}
-                      width={24}
-                      height={24}
-                      className="rounded-full bg-background border border-border-hairline-soft shrink-0"
-                    />
-                    <div className="flex flex-col min-w-0">
-                      <span className="font-sans font-bold text-sm sm:text-base text-ink block truncate leading-tight">
-                        {item.name}
-                      </span>
-                      <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider mt-0.5 leading-none">
-                        {item.count} {item.count === 1 ? "watch" : "watches"}
-                      </span>
+                    {/* Coin Name and Info with Logo */}
+                    <div className="flex items-center gap-3 w-32 sm:w-44 shrink-0">
+                      <Image
+                        src={COIN_LOGOS[item.id] || "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"}
+                        alt={`${item.name} logo`}
+                        width={24}
+                        height={24}
+                        className="rounded-full bg-background border border-border-hairline-soft shrink-0"
+                      />
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-sans font-bold text-sm sm:text-base text-ink block truncate leading-tight">
+                          {item.name}
+                        </span>
+                        <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider mt-0.5 leading-none">
+                          {item.count} {item.count === 1 ? "watch" : "watches"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Visual Popularity Bar */}
+                    <div className="flex-1 bg-background h-5.5 rounded-full overflow-hidden border border-border-hairline-soft relative flex items-center px-1">
+                      <div
+                        className="bg-brand h-3.5 rounded-full transition-all duration-500 border border-border-hairline-soft"
+                        style={{ width: `${Math.max(relativePercent, 2)}%` }}
+                      />
+                    </div>
+
+                    {/* Eye Icon indicator */}
+                    <div className="hidden sm:flex items-center text-text-muted/60 gap-1 shrink-0">
+                      <Eye className="w-4 h-4" />
                     </div>
                   </div>
-
-                  {/* Visual Popularity Bar */}
-                  <div className="flex-1 bg-background h-5.5 rounded-full overflow-hidden border border-border-hairline-soft relative flex items-center px-1">
-                    <div
-                      className="bg-brand h-3.5 rounded-full transition-all duration-500 border border-border-hairline-soft"
-                      style={{ width: `${Math.max(relativePercent, 2)}%` }}
-                    />
-                  </div>
-
-                  {/* Eye Icon indicator */}
-                  <div className="hidden sm:flex items-center text-text-muted/60 gap-1 shrink-0">
-                    <Eye className="w-4 h-4" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Separator line */}
