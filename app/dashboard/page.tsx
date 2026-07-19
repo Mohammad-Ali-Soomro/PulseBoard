@@ -3,6 +3,8 @@ import { fetchCryptoPrices, COIN_LOGOS } from "@/lib/prices";
 import { ArrowUpRight, ArrowDownRight, TrendingUp } from "lucide-react";
 import PriceChart from "@/components/PriceChart";
 import Image from "next/image";
+import AlertWidget from "@/components/AlertWidget";
+import AlertManager from "@/components/AlertManager";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +41,9 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Reusable Navbar */}
       <Navbar />
+
+      {/* Background Alert Listener & Notification Toast Trigger */}
+      <AlertManager />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-12">
         {/* Page Header */}
@@ -94,6 +99,9 @@ export default async function DashboardPage() {
                   <div className="font-sans font-bold text-xl tracking-tight text-ink">
                     {formatPrice(coin.price)}
                   </div>
+
+                  {/* Set Price Alerts Form Widget */}
+                  <AlertWidget coinId={coin.id} currentPrice={coin.price} />
                 </div>
 
                 {/* 24h Change & Market Cap */}
