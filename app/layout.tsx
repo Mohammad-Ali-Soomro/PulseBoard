@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Figtree } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
 
 const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
@@ -44,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ebGaramond.variable} ${figtree.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans bg-background text-ink min-h-screen" suppressHydrationWarning>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

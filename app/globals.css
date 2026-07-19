@@ -3,20 +3,20 @@
 @config "../tailwind.config.ts";
 
 @theme {
-  --color-background: #FFFFEB;
-  --color-background-deep: #E4E4D0;
-  --color-ink: #1A1A1A;
-  --color-ink-darkest: #111111;
-  --color-text-muted: #666666;
-  --color-brand: #F0D7FF;
-  --color-brand-hover: #E8C6FF;
-  --color-panel-dark: #034F46;
-  --color-accent: #FFA946;
-  --color-border-hairline: rgba(26, 26, 26, 0.30);
-  --color-border-hairline-soft: rgba(26, 26, 26, 0.10);
-  --color-focus-ring: #2D62FF;
-  --color-success: #16A34A;
-  --color-danger: #DC2626;
+  --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-ink: var(--ink);
+  --color-ink-darkest: var(--ink-darkest);
+  --color-text-muted: var(--text-muted);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-panel-dark: var(--panel-dark);
+  --color-accent: var(--accent);
+  --color-border-hairline: var(--border-hairline);
+  --color-border-hairline-soft: var(--border-hairline-soft);
+  --color-focus-ring: var(--focus-ring);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
 
   --radius-input: 8px;
   --radius-btn: 12px;
@@ -27,7 +27,38 @@
   --font-serif: var(--font-eb-garamond), ui-serif, Georgia, serif;
 }
 
+:root {
+  --background: #FFFFEB;
+  --background-deep: #E4E4D0;
+  --ink: #1A1A1A;
+  --ink-darkest: #111111;
+  --text-muted: #666666;
+  --brand: #F0D7FF;
+  --brand-hover: #E8C6FF;
+  --panel-dark: #034F46;
+  --accent: #FFA946;
+  --border-hairline: rgba(26, 26, 26, 0.30);
+  --border-hairline-soft: rgba(26, 26, 26, 0.10);
+  --focus-ring: #2D62FF;
+  --success: #16A34A;
+  --danger: #DC2626;
+}
+
+.dark {
+  --background: #141412;
+  --background-deep: #232320;
+  --ink: #F5F5EB;
+  --ink-darkest: #FFFFFF;
+  --text-muted: #A0A090;
+  --brand: #E6CEFF;
+  --brand-hover: #D8B2FF;
+  --border-hairline: rgba(245, 245, 235, 0.30);
+  --border-hairline-soft: rgba(245, 245, 235, 0.12);
+  --focus-ring: #5585FF;
+}
+
 body {
-  background-color: var(--color-background);
-  color: var(--color-ink);
+  background-color: var(--background);
+  color: var(--ink);
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }

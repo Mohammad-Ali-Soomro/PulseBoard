@@ -12,6 +12,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { TrendingUp, RefreshCw, AlertCircle, DollarSign, Calendar } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const SUPPORTED_COINS = [
   { id: "bitcoin", name: "Bitcoin" },
@@ -42,6 +43,18 @@ interface SimulationResult {
 }
 
 export default function SimulatorPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+  const gridColor = isDark ? "rgba(245, 245, 235, 0.12)" : "rgba(26, 26, 26, 0.10)";
+  const tickColor = isDark ? "#A0A090" : "#666666";
+  const strokeColor = isDark ? "#E6CEFF" : "#034F46";
+
   const [coinId, setCoinId] = useState("bitcoin");
   const [investedAmount, setInvestedAmount] = useState("1000");
   const [days, setDays] = useState("30");
@@ -329,27 +342,27 @@ export default function SimulatorPage() {
                       >
                         <defs>
                           <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#034F46" stopOpacity={0.25} />
-                            <stop offset="95%" stopColor="#034F46" stopOpacity={0.0} />
+                            <stop offset="5%" stopColor={strokeColor} stopOpacity={0.25} />
+                            <stop offset="95%" stopColor={strokeColor} stopOpacity={0.0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid
                           vertical={false}
                           strokeDasharray="4 4"
-                          stroke="rgba(26, 26, 26, 0.10)"
+                          stroke={gridColor}
                           opacity={0.5}
                         />
                         <XAxis
                           dataKey="date"
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "#666666", fontSize: 9, fontWeight: 700 }}
+                          tick={{ fill: tickColor, fontSize: 9, fontWeight: 700 }}
                           dy={6}
                         />
                         <YAxis
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "#666666", fontSize: 9, fontWeight: 700 }}
+                          tick={{ fill: tickColor, fontSize: 9, fontWeight: 700 }}
                           dx={-6}
                           domain={["auto", "auto"]}
                           tickFormatter={(v) => `$${v.toFixed(0)}`}
@@ -378,11 +391,11 @@ export default function SimulatorPage() {
                         <Area
                           type="monotone"
                           dataKey="value"
-                          stroke="#034F46"
+                          stroke={strokeColor}
                           strokeWidth={2}
                           fillOpacity={1}
                           fill="url(#colorValue)"
-                          activeDot={{ r: 4.5, strokeWidth: 0, fill: "#034F46" }}
+                          activeDot={{ r: 4.5, strokeWidth: 0, fill: strokeColor }}
                         />
                       </AreaChart>
                     </ResponsiveContainer>

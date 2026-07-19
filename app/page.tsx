@@ -15,7 +15,7 @@ export default function Home() {
             {/* Tagline */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill bg-background-deep border border-border-hairline-soft text-xs font-semibold text-ink tracking-wide uppercase mb-8 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Live Telemetry Engine v1.0
+              Live Telemetry Engine
             </div>
 
             {/* Giant Headline */}

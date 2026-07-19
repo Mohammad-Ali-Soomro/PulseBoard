@@ -11,6 +11,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Activity, AlertCircle, RefreshCw } from "lucide-react";
+import { useTheme } from "next-themes";
 
 interface HistoricalDataPoint {
   date: string;
@@ -35,6 +36,18 @@ const SUPPORTED_COINS = [
 ];
 
 export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+  const gridColor = isDark ? "rgba(245, 245, 235, 0.12)" : "rgba(26, 26, 26, 0.10)";
+  const tickColor = isDark ? "#A0A090" : "#666666";
+  const strokeColor = isDark ? "#E6CEFF" : "#034F46";
+
   const [activeCoinId, setActiveCoinId] = useState<string>(coinId);
   const [historicalData, setHistoricalData] = useState<HistoricalDataPoint[]>([]);
   const [liveInfo, setLiveInfo] = useState<PriceData | null>(null);
@@ -209,27 +222,27 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
             >
               <defs>
                 <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#034F46" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#034F46" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor={strokeColor} stopOpacity={0.25} />
+                  <stop offset="95%" stopColor={strokeColor} stopOpacity={0.0} />
                 </linearGradient>
               </defs>
               <CartesianGrid
                 vertical={false}
                 strokeDasharray="4 4"
-                stroke="rgba(26, 26, 26, 0.10)"
+                stroke={gridColor}
                 opacity={0.5}
               />
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#666666", fontSize: 10, fontWeight: 700 }}
+                tick={{ fill: tickColor, fontSize: 10, fontWeight: 700 }}
                 dy={10}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#666666", fontSize: 10, fontWeight: 700 }}
+                tick={{ fill: tickColor, fontSize: 10, fontWeight: 700 }}
                 dx={-8}
                 domain={["auto", "auto"]}
                 tickFormatter={(v) =>
@@ -259,11 +272,11 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
               <Area
                 type="monotone"
                 dataKey="price"
-                stroke="#034F46"
+                stroke={strokeColor}
                 strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#colorPrice)"
-                activeDot={{ r: 5, strokeWidth: 0, fill: "#034F46" }}
+                activeDot={{ r: 5, strokeWidth: 0, fill: strokeColor }}
               />
             </AreaChart>
           </ResponsiveContainer>
