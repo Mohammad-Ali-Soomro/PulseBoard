@@ -87,7 +87,6 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
     } catch (err) {
       console.error("Live price polling error:", err);
     } finally {
-      // Small delay to simulate active polling state visual
       setTimeout(() => setIsPolling(false), 800);
     }
   }, []);
@@ -118,7 +117,7 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
     <div className="flex flex-col gap-6">
       {/* Coin Selector row & Live indicator */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        {/* Row of pill shaped buttons */}
+        {/* Row of buttons */}
         <div className="flex flex-wrap gap-2">
           {SUPPORTED_COINS.map((coin) => {
             const isActive = coin.id === activeCoinId;
@@ -126,10 +125,10 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
               <button
                 key={coin.id}
                 onClick={() => handleCoinSelect(coin.id)}
-                className={`px-4.5 py-2 text-sm font-semibold rounded-pill transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-2 text-xs font-bold rounded-btn transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-primary text-white shadow-sm shadow-primary/20 border border-primary"
-                    : "bg-white text-text-secondary border border-border hover:bg-surface hover:text-text-primary"
+                    ? "bg-brand text-ink border border-border-hairline hover:bg-brand-hover"
+                    : "bg-background text-text-muted border border-border-hairline-soft hover:bg-background-deep hover:text-ink"
                 }`}
               >
                 {coin.name}
@@ -142,13 +141,13 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <div className="relative flex h-2 w-2">
             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-              isPolling ? "bg-primary" : "bg-success"
+              isPolling ? "bg-accent" : "bg-success"
             }`} />
             <span className={`relative inline-flex rounded-full h-2 w-2 ${
-              isPolling ? "bg-primary" : "bg-success"
+              isPolling ? "bg-accent" : "bg-success"
             }`} />
           </div>
-          <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
             {isPolling ? "Syncing..." : "Live Feed"}
           </span>
         </div>
@@ -157,46 +156,46 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
       {/* Live Readout Panel */}
       {liveInfo && (
         <div className="flex items-baseline gap-3.5 mt-2">
-          <span className="font-sans font-bold text-3xl tracking-tight text-text-primary">
+          <span className="font-sans font-bold text-3xl tracking-tight text-ink">
             {formatCurrency(liveInfo.price)}
           </span>
           <span
-            className={`font-sans font-bold text-sm px-2 py-0.5 rounded-pill ${
+            className={`font-sans font-bold text-xs px-2.5 py-0.5 rounded-pill ${
               liveInfo.change24h >= 0
-                ? "text-success bg-success/10"
-                : "text-danger bg-danger/10"
+                ? "text-success bg-success/15 border border-success/20"
+                : "text-danger bg-danger/15 border border-danger/20"
             }`}
           >
             {liveInfo.change24h >= 0 ? "+" : ""}
             {liveInfo.change24h.toFixed(2)}%
           </span>
-          <span className="text-xs text-text-secondary font-medium">
+          <span className="text-[10px] text-text-muted font-bold uppercase tracking-wider">
             24h live readout
           </span>
         </div>
       )}
 
       {/* Chart Canvas Area */}
-      <div className="relative h-80 w-full bg-white rounded-card border border-border/50 p-4">
+      <div className="relative h-80 w-full bg-background rounded-card border border-border-hairline-soft p-4">
         {historyLoading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/50 backdrop-blur-xs rounded-card">
-            <RefreshCw className="w-8 h-8 text-primary animate-spin mb-2" />
-            <span className="text-xs text-text-secondary font-semibold">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50 backdrop-blur-xs rounded-card">
+            <RefreshCw className="w-8 h-8 text-ink animate-spin mb-2" />
+            <span className="text-xs text-text-muted font-semibold">
               Loading {activeCoinName} history...
             </span>
           </div>
         ) : historyError ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-card text-center p-6">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background rounded-card text-center p-6">
             <AlertCircle className="w-9 h-9 text-danger mb-2" />
-            <div className="text-sm font-bold text-text-primary mb-1">
+            <div className="text-sm font-bold text-ink mb-1">
               Data Fetch Failed
             </div>
-            <div className="text-xs text-text-secondary max-w-xs mb-4">
+            <div className="text-xs text-text-muted max-w-xs mb-4">
               {historyError}
             </div>
             <button
               onClick={() => fetchHistory(activeCoinId)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-surface border border-border rounded-pill text-xs font-bold text-text-primary hover:bg-border/30 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-background border border-border-hairline rounded-btn text-xs font-bold text-ink hover:bg-background-deep transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Retry Fetch
@@ -210,27 +209,27 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
             >
               <defs>
                 <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4E5FFD" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#4E5FFD" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#034F46" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="#034F46" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
               <CartesianGrid
                 vertical={false}
                 strokeDasharray="4 4"
-                stroke="#E5E7EB"
-                opacity={0.3}
+                stroke="rgba(26, 26, 26, 0.10)"
+                opacity={0.5}
               />
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#6B7280", fontSize: 11, fontWeight: 500 }}
+                tick={{ fill: "#666666", fontSize: 10, fontWeight: 700 }}
                 dy={10}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#6B7280", fontSize: 11, fontWeight: 500 }}
+                tick={{ fill: "#666666", fontSize: 10, fontWeight: 700 }}
                 dx={-8}
                 domain={["auto", "auto"]}
                 tickFormatter={(v) =>
@@ -244,8 +243,8 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
                   if (active && payload && payload.length) {
                     const data = payload[0].payload as HistoricalDataPoint;
                     return (
-                      <div className="bg-[#0A0A0F] text-white p-3 rounded-card border border-white/10 shadow-lg font-sans">
-                        <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+                      <div className="bg-[#034F46] text-[#FFFFEB] p-3 rounded-card border border-white/10 shadow-lg font-sans">
+                        <div className="text-[9px] text-[#FFFFEB]/70 font-bold uppercase tracking-wider">
                           {data.date}
                         </div>
                         <div className="text-sm font-extrabold mt-1">
@@ -260,11 +259,11 @@ export default function PriceChart({ coinId = "bitcoin" }: { coinId?: string }) 
               <Area
                 type="monotone"
                 dataKey="price"
-                stroke="#4E5FFD"
+                stroke="#034F46"
                 strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#colorPrice)"
-                activeDot={{ r: 5, strokeWidth: 0, fill: "#4E5FFD" }}
+                activeDot={{ r: 5, strokeWidth: 0, fill: "#034F46" }}
               />
             </AreaChart>
           </ResponsiveContainer>

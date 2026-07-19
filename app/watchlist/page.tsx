@@ -39,7 +39,6 @@ async function getMostWatchedCoins(): Promise<MostWatchedCoin[]> {
 
     if (!data) return [];
 
-    // Map and type the results
     return data.map((item) => ({
       coin_id: item.coin_id,
       watch_count: Number(item.watch_count || 0),
@@ -77,40 +76,40 @@ export default async function WatchlistPage() {
     }))
     .sort((a, b) => b.count - a.count);
 
-  // Compute maximum count for relative popularity bar calculations (minimum divisor is 1 to avoid NaN/Infinity)
+  // Compute divisor
   const maxWatchCount = Math.max(...sortedStats.map((item) => item.count), 1);
 
   return (
-    <div className="flex flex-col min-h-screen bg-surface">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Reusable Navbar */}
       <Navbar />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-12">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-primary/10 text-xs font-bold text-primary mb-4">
-            <Flame className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent/20 text-xs font-bold text-ink mb-4 border border-border-hairline-soft">
+            <Flame className="w-3.5 h-3.5 text-accent" />
             Global Sentiment Tracker
           </div>
-          <h1 className="font-sans font-bold text-3xl sm:text-4xl text-text-primary tracking-tight">
+          <h1 className="font-serif font-semibold text-3xl sm:text-4xl text-ink tracking-tight">
             Sentiment Leaderboard
           </h1>
-          <p className="text-text-secondary text-sm mt-2 leading-relaxed">
+          <p className="text-text-muted text-sm mt-2 leading-relaxed">
             See which assets are currently trending and being watched the most by the PulseBoard operator network.
           </p>
         </div>
 
         {/* Leaderboard Card */}
-        <div className="bg-white border border-border rounded-card p-6 sm:p-8 shadow-sm mb-12">
+        <div className="bg-background-deep border border-border-hairline-soft rounded-card p-6 sm:p-8 mb-12">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-card bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-10 h-10 rounded-card bg-background flex items-center justify-center text-ink border border-border-hairline-soft animate-pulse">
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-sans font-bold text-lg text-text-primary">
+              <h2 className="font-serif font-semibold text-xl text-ink">
                 Most Watched Coins
               </h2>
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-text-muted mt-0.5">
                 Aggregated sentiment rank updated every 60 seconds
               </p>
             </div>
@@ -125,7 +124,7 @@ export default async function WatchlistPage() {
               return (
                 <div key={item.id} className="flex items-center gap-4">
                   {/* Rank Number */}
-                  <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center font-sans font-bold text-sm text-text-primary shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-background border border-border-hairline-soft flex items-center justify-center font-sans font-bold text-sm text-ink shrink-0">
                     {rank}
                   </div>
 
@@ -136,28 +135,28 @@ export default async function WatchlistPage() {
                       alt={`${item.name} logo`}
                       width={24}
                       height={24}
-                      className="rounded-full bg-surface border border-border shrink-0"
+                      className="rounded-full bg-background border border-border-hairline-soft shrink-0"
                     />
                     <div className="flex flex-col min-w-0">
-                      <span className="font-sans font-bold text-sm sm:text-base text-text-primary block truncate leading-tight">
+                      <span className="font-sans font-bold text-sm sm:text-base text-ink block truncate leading-tight">
                         {item.name}
                       </span>
-                      <span className="text-[9px] text-text-secondary font-bold uppercase tracking-wider mt-0.5 leading-none">
+                      <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider mt-0.5 leading-none">
                         {item.count} {item.count === 1 ? "watch" : "watches"}
                       </span>
                     </div>
                   </div>
 
                   {/* Visual Popularity Bar */}
-                  <div className="flex-1 bg-surface h-5.5 rounded-full overflow-hidden border border-border/30 relative flex items-center px-1">
+                  <div className="flex-1 bg-background h-5.5 rounded-full overflow-hidden border border-border-hairline-soft relative flex items-center px-1">
                     <div
-                      className="bg-primary h-3.5 rounded-full transition-all duration-500 shadow-xs shadow-primary/10"
+                      className="bg-brand h-3.5 rounded-full transition-all duration-500 border border-border-hairline-soft"
                       style={{ width: `${Math.max(relativePercent, 2)}%` }}
                     />
                   </div>
 
                   {/* Eye Icon indicator */}
-                  <div className="hidden sm:flex items-center text-text-secondary/60 gap-1 shrink-0">
+                  <div className="hidden sm:flex items-center text-text-muted/60 gap-1 shrink-0">
                     <Eye className="w-4 h-4" />
                   </div>
                 </div>
@@ -167,7 +166,7 @@ export default async function WatchlistPage() {
         </div>
 
         {/* Separator line */}
-        <hr className="border-border/60 my-12" />
+        <hr className="border-border-hairline-soft my-12" />
 
         {/* Client Component Join Form */}
         <WatchlistForm />

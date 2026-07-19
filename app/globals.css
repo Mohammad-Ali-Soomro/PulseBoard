@@ -3,22 +3,31 @@
 @config "../tailwind.config.ts";
 
 @theme {
-  --color-background: #FFFFFF;
-  --color-surface: #F7F8FA;
-  --color-primary: #4E5FFD;
-  --color-text-primary: #0A0A0F;
-  --color-text-secondary: #6B7280;
+  --color-background: #FFFFEB;
+  --color-background-deep: #E4E4D0;
+  --color-ink: #1A1A1A;
+  --color-ink-darkest: #111111;
+  --color-text-muted: #666666;
+  --color-brand: #F0D7FF;
+  --color-brand-hover: #E8C6FF;
+  --color-panel-dark: #034F46;
+  --color-accent: #FFA946;
+  --color-border-hairline: rgba(26, 26, 26, 0.30);
+  --color-border-hairline-soft: rgba(26, 26, 26, 0.10);
+  --color-focus-ring: #2D62FF;
   --color-success: #16A34A;
   --color-danger: #DC2626;
-  --color-border: #E5E7EB;
 
+  --radius-input: 8px;
+  --radius-btn: 12px;
   --radius-card: 16px;
   --radius-pill: 9999px;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-eb-garamond), ui-serif, Georgia, serif;
 }
 
 body {
   background-color: var(--color-background);
-  color: var(--color-text-primary);
+  color: var(--color-ink);
 }

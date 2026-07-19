@@ -39,7 +39,6 @@ export default function WatchlistForm() {
         .insert({ user_email: cleanEmail, coin_id: coinId });
 
       if (error) {
-        // Handle duplicate entries constraint error code: 23505 (unique_violation)
         if (error.code === "23505") {
           throw new Error("This coin is already in your watchlist!");
         }
@@ -52,7 +51,6 @@ export default function WatchlistForm() {
       });
       setEmail("");
       
-      // Request Next.js server to refresh data in the background
       router.refresh();
     } catch (err: any) {
       console.error("Watchlist insert error:", err);
@@ -66,12 +64,12 @@ export default function WatchlistForm() {
   };
 
   return (
-    <div className="bg-white border border-border rounded-card p-6 shadow-sm max-w-xl mx-auto w-full">
+    <div className="bg-background-deep border border-border-hairline-soft rounded-card p-6 max-w-xl mx-auto w-full">
       <div className="mb-6">
-        <h2 className="font-sans font-bold text-lg text-text-primary">
+        <h2 className="font-serif font-semibold text-xl text-ink">
           Join Watchlist
         </h2>
-        <p className="text-xs text-text-secondary mt-1">
+        <p className="text-xs text-text-muted mt-1">
           Add your email to track custom assets and monitor live market indicators.
         </p>
       </div>
@@ -79,7 +77,7 @@ export default function WatchlistForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email Input */}
         <div>
-          <label htmlFor="email" className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">
+          <label htmlFor="email" className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Email Address
           </label>
           <input
@@ -89,20 +87,20 @@ export default function WatchlistForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-hidden focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+            className="w-full px-4 py-3 bg-background border border-border-hairline rounded-input text-sm text-ink placeholder:text-text-muted/50 focus:outline-hidden focus:border-focus-ring focus:ring-1 focus:ring-focus-ring transition-all"
           />
         </div>
 
         {/* Dropdown Input */}
         <div>
-          <label htmlFor="coin" className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">
+          <label htmlFor="coin" className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Select Asset
           </label>
           <select
             id="coin"
             value={coinId}
             onChange={(e) => setCoinId(e.target.value)}
-            className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-sm text-text-primary focus:outline-hidden focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer"
+            className="w-full px-4 py-3 bg-background border border-border-hairline rounded-input text-sm text-ink focus:outline-hidden focus:border-focus-ring focus:ring-1 focus:ring-focus-ring transition-all appearance-none cursor-pointer"
           >
             {SUPPORTED_COINS.map((coin) => (
               <option key={coin.id} value={coin.id}>
@@ -116,11 +114,11 @@ export default function WatchlistForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-white bg-primary rounded-pill hover:opacity-95 active:scale-98 disabled:opacity-60 transition-all cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 text-sm font-bold text-ink bg-brand border border-border-hairline rounded-btn hover:bg-brand-hover disabled:opacity-60 transition-all cursor-pointer"
         >
           {loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin animate-duration-1000" />
               Processing...
             </>
           ) : (
@@ -135,10 +133,10 @@ export default function WatchlistForm() {
       {/* Feedback Messages */}
       {status && (
         <div
-          className={`mt-4 p-4 rounded-lg flex items-start gap-2.5 text-xs font-semibold ${
+          className={`mt-4 p-4 rounded-input flex items-start gap-2.5 text-xs font-semibold ${
             status.type === "success"
-              ? "bg-success/10 text-success"
-              : "bg-danger/10 text-danger"
+              ? "bg-success/15 text-success border border-success/20"
+              : "bg-danger/15 text-danger border border-danger/20"
           }`}
         >
           {status.type === "success" ? (

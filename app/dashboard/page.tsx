@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   const lastUpdatedStr = new Date(timestamp).toLocaleTimeString();
 
   return (
-    <div className="flex flex-col min-h-screen bg-surface">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Reusable Navbar */}
       <Navbar />
 
@@ -44,14 +44,14 @@ export default async function DashboardPage() {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
-            <h1 className="font-sans font-bold text-3xl sm:text-4xl text-text-primary tracking-tight">
+            <h1 className="font-serif font-semibold text-3xl sm:text-4xl text-ink tracking-tight">
               Live Market Dashboard
             </h1>
-            <p className="text-text-secondary text-sm mt-1">
+            <p className="text-text-muted text-sm mt-1">
               Real-time prices from CoinGecko &bull; Updated at {lastUpdatedStr}
             </p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-pill bg-white border border-border text-xs font-medium text-text-secondary shadow-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-pill bg-background-deep border border-border-hairline-soft text-xs font-semibold text-text-muted shadow-xs">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
             Live Feed Active
           </div>
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
             return (
               <div
                 key={coin.id}
-                className="flex flex-col justify-between bg-white border border-border rounded-card p-6 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200"
+                className="flex flex-col justify-between bg-background-deep border border-border-hairline-soft rounded-card p-6"
               >
                 <div>
                   {/* Name and Symbol with Logo */}
@@ -77,13 +77,13 @@ export default async function DashboardPage() {
                         alt={`${coin.name} logo`}
                         width={32}
                         height={32}
-                        className="rounded-full bg-surface border border-border"
+                        className="rounded-full bg-background border border-border-hairline-soft shrink-0"
                       />
-                      <div className="flex flex-col">
-                        <span className="font-sans font-semibold text-text-secondary text-[10px] uppercase tracking-wider leading-none">
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-sans font-semibold text-text-muted text-[10px] uppercase tracking-wider leading-none">
                           {coin.symbol}
                         </span>
-                        <span className="font-sans font-bold text-text-primary text-sm mt-0.5 leading-none">
+                        <span className="font-sans font-bold text-ink text-sm mt-0.5 leading-none truncate">
                           {coin.name}
                         </span>
                       </div>
@@ -91,26 +91,26 @@ export default async function DashboardPage() {
                   </div>
 
                   {/* Current Price */}
-                  <div className="font-sans font-bold text-2xl tracking-tight text-text-primary">
+                  <div className="font-sans font-bold text-xl tracking-tight text-ink">
                     {formatPrice(coin.price)}
                   </div>
                 </div>
 
                 {/* 24h Change & Market Cap */}
-                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-border-hairline-soft flex items-center justify-between">
                   <div
-                    className={`inline-flex items-center gap-0.5 text-sm font-bold ${
+                    className={`inline-flex items-center gap-0.5 text-xs font-bold ${
                       isPositive ? "text-success" : "text-danger"
                     }`}
                   >
                     {isPositive ? (
-                      <ArrowUpRight className="w-4 h-4" />
+                      <ArrowUpRight className="w-3.5 h-3.5" />
                     ) : (
-                      <ArrowDownRight className="w-4 h-4" />
+                      <ArrowDownRight className="w-3.5 h-3.5" />
                     )}
                     {changeStr}
                   </div>
-                  <div className="text-xs text-text-secondary font-medium">
+                  <div className="text-[10px] text-text-muted font-bold">
                     MCap {formatMarketCap(coin.marketCap)}
                   </div>
                 </div>
@@ -120,16 +120,16 @@ export default async function DashboardPage() {
         </div>
 
         {/* Price History Placeholder */}
-        <div className="bg-white border border-border rounded-card p-6 shadow-sm">
+        <div className="bg-background-deep border border-border-hairline-soft rounded-card p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-card bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-10 h-10 rounded-card bg-background flex items-center justify-center text-ink border border-border-hairline-soft">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-sans font-bold text-lg text-text-primary">
+              <h2 className="font-serif font-semibold text-xl text-ink">
                 Price History
               </h2>
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-text-muted mt-0.5">
                 Historical performance over the last 7 days
               </p>
             </div>
