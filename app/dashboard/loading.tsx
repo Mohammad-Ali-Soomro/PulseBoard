@@ -1,4 +1,5 @@
 import { Activity } from "lucide-react";
+import Skeleton from "@/components/Skeleton";
 
 export default function Loading() {
   return (
@@ -22,10 +23,10 @@ export default function Loading() {
         {/* Header Skeleton */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
-            <div className="h-9 w-64 bg-background-deep/70 rounded animate-pulse" />
-            <div className="h-4 w-48 bg-background-deep/40 rounded mt-2 animate-pulse" />
+            <Skeleton className="h-9 w-64 rounded-sm" variant="deep" />
+            <Skeleton className="h-4 w-48 rounded-xs mt-2" variant="deep" />
           </div>
-          <div className="w-32 h-7 rounded-pill bg-background-deep/40 animate-pulse" />
+          <div className="w-32 h-7 rounded-pill bg-background-deep/40 animate-pulse border border-border-hairline-soft" />
         </div>
 
         {/* Price Grid Skeletons */}
@@ -33,18 +34,27 @@ export default function Loading() {
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col justify-between bg-background-deep border border-border-hairline-soft rounded-card p-6 animate-pulse"
+              className="flex flex-col justify-between bg-background-deep border border-border-hairline-soft rounded-card p-6"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-4">
-                  <div className="w-8 h-4 bg-background/50 rounded" />
-                  <div className="w-16 h-4 bg-background/50 rounded" />
+                  <div className="flex items-center gap-2">
+                    {/* Circle Logo Placeholder */}
+                    <Skeleton className="w-8 h-8 rounded-full" variant="light" />
+                    <div className="flex flex-col">
+                      {/* Symbol / Name placeholders */}
+                      <Skeleton className="w-8 h-2.5 rounded-xs" variant="light" />
+                      <Skeleton className="w-16 h-3 rounded-xs mt-1" variant="light" />
+                    </div>
+                  </div>
                 </div>
-                <div className="w-28 h-8 bg-background/70 rounded mt-2" />
+                {/* Price placeholder */}
+                <Skeleton className="w-24 h-6 rounded-xs mt-4" variant="light" />
               </div>
+              {/* Bottom row */}
               <div className="mt-8 pt-4 border-t border-border-hairline-soft flex items-center justify-between">
-                <div className="w-12 h-5 bg-background/50 rounded" />
-                <div className="w-16 h-4 bg-background/40 rounded" />
+                <Skeleton className="w-12 h-5 rounded-pill" variant="light" />
+                <Skeleton className="w-16 h-3.5 rounded-xs" variant="light" />
               </div>
             </div>
           ))}
@@ -52,14 +62,17 @@ export default function Loading() {
 
         {/* Chart Skeleton */}
         <div className="bg-background-deep border border-border-hairline-soft rounded-card p-6">
-          <div className="flex items-center gap-3 mb-6 animate-pulse">
-            <div className="w-10 h-10 rounded-card bg-background/50" />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-card bg-background flex items-center justify-center text-ink border border-border-hairline-soft animate-pulse">
+              <Activity className="w-5 h-5 opacity-25" />
+            </div>
             <div>
-              <div className="w-28 h-6 bg-background/60 rounded" />
-              <div className="w-48 h-3.5 bg-background/40 rounded mt-1.5" />
+              <Skeleton className="w-28 h-5.5 rounded-sm" variant="light" />
+              <Skeleton className="w-48 h-3.5 rounded-xs mt-1.5" variant="light" />
             </div>
           </div>
-          <div className="h-80 w-full rounded-card bg-background border border-dashed border-border-hairline-soft animate-pulse" />
+          {/* Simple pulsing rectangle matching active chart height */}
+          <Skeleton className="h-80 w-full rounded-card" variant="light" />
         </div>
       </main>
     </div>
