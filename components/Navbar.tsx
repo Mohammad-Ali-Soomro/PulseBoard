@@ -41,6 +41,12 @@ export default function Navbar() {
             Simulator
           </Link>
           <Link
+            href="/backtest"
+            className="text-sm font-medium text-text-muted hover:text-ink transition-colors"
+          >
+            Backtest
+          </Link>
+          <Link
             href="/#features"
             className="text-sm font-medium text-text-muted hover:text-ink transition-colors"
           >
@@ -93,6 +99,13 @@ export default function Navbar() {
             className="block text-sm font-semibold text-text-muted hover:text-ink transition-colors"
           >
             Simulator
+          </Link>
+          <Link
+            href="/backtest"
+            onClick={() => setIsOpen(false)}
+            className="block text-sm font-semibold text-text-muted hover:text-ink transition-colors"
+          >
+            Backtest
           </Link>
           <Link
             href="/#features"
