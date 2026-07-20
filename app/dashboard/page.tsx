@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { supabase } from "@/lib/supabase";
 import CoinSearch from "@/components/CoinSearch";
 import RemoveCoinButton from "@/components/RemoveCoinButton";
+import UnusualActivity from "@/components/UnusualActivity";
 
 export const dynamic = "force-dynamic";
 
@@ -88,6 +89,9 @@ export default async function DashboardPage() {
 
         {/* Dynamic Search & Track input */}
         <CoinSearch />
+
+        {/* Unusual Activity anomalies check */}
+        <UnusualActivity coinIds={coinIds} />
 
         {/* Price Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
