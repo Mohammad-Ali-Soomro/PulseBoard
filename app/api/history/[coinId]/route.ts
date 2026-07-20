@@ -33,7 +33,8 @@ export async function GET(
 
   const { searchParams } = new URL(request.url);
   const daysParam = searchParams.get("days") || "7";
-  const days = ["7", "30", "90"].includes(daysParam) ? daysParam : "7";
+  const daysVal = parseInt(daysParam, 10);
+  const days = !isNaN(daysVal) && daysVal >= 1 && daysVal <= 365 ? daysVal.toString() : "7";
 
   const currentTime = Date.now();
   const cacheKey = `${coinId}_${days}`;
